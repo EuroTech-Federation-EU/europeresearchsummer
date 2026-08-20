@@ -1,0 +1,17 @@
+---
+import { displayTitle, kicker } from "../../lib/styles";
+
+interface Props {
+  eyebrowText: string;
+  title: string;
+  lead?: string;
+}
+
+const { eyebrowText, title, lead } = Astro.props;
+---
+
+<div class="mb-14 border-t border-line pt-5">
+  <p class={kicker}>{eyebrowText}</p>
+  <h2 class={`mt-8 max-w-3xl ${displayTitle}`}>{title}</h2>
+  {lead && <p class="mt-5 max-w-2xl text-lg text-muted">{lead}</p>}
+</div>

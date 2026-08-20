@@ -1,0 +1,49 @@
+---
+import SectionHead from "../ui/SectionHead.astro";
+import { FAQ } from "../../data/faq";
+import { CONTACT_EMAIL } from "../../data/site";
+
+const detailsClass = "faq group border-b border-line";
+const summaryClass =
+  "flex cursor-pointer list-none items-center justify-between gap-4 py-6 text-lg font-semibold tracking-tight [&::-webkit-details-marker]:hidden after:font-mono after:text-2xl after:font-normal after:leading-none after:text-cyan after:transition-transform after:duration-200 after:ease-snap after:content-['+'] group-open:after:rotate-45";
+const STAGGER_STEP_MS = 40;
+---
+
+<section id="faq" class="py-20 md:py-28">
+  <div class="mx-auto max-w-6xl px-6">
+    <div data-reveal>
+      <SectionHead eyebrowText="FAQ" title="Frequently asked questions." />
+    </div>
+    <div class="max-w-3xl border-t border-line">
+      {
+        FAQ.map((item, index) => (
+          <details
+            name="faq"
+            data-reveal
+            style={`--reveal-delay: ${index * STAGGER_STEP_MS}ms`}
+            class={detailsClass}
+          >
+            <summary class={summaryClass}>{item.q}</summary>
+            <p class="pb-6 text-muted">{item.a}</p>
+          </details>
+        ))
+      }
+      <details
+        name="faq"
+        data-reveal
+        style={`--reveal-delay: ${FAQ.length * STAGGER_STEP_MS}ms`}
+        class={detailsClass}
+      >
+        <summary class={summaryClass}>
+          My question isn't here. Who do I ask?
+        </summary>
+        <p class="pb-6 text-muted">
+          Write to us at <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            class="font-medium text-cyan hover:underline">{CONTACT_EMAIL}</a
+          > and we'll get back to you within a few days.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>

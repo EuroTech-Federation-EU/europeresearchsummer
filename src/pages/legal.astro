@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { LEGAL_SECTIONS } from "../data/legal";
+import { displayTitle, kicker } from "../lib/styles";
+---
+
+<Layout
+  title="Legal notice — Europe Research Summer"
+  description="Legal notice, cookies, and data practices for the Europe Research Summer website by EuroTech Federation."
+>
+  <main class="mx-auto max-w-3xl px-6 py-20 md:py-28">
+    <p class={kicker}>Legal</p>
+    <h1 class={`mt-8 ${displayTitle}`}>Legal notice.</h1>
+    {
+      LEGAL_SECTIONS.map((section) => (
+        <section class="mt-12 border-t border-line pt-6">
+          <h2 class="font-mono text-xs tracking-[0.2em] text-muted uppercase">
+            {section.title}
+          </h2>
+          <p class="mt-4 text-muted">{section.body}</p>
+        </section>
+      ))
+    }
+  </main>
+</Layout>

@@ -1,0 +1,75 @@
+---
+import { Image } from "astro:assets";
+import logoLight from "../../assets/logo-light.png";
+import { CONTACT_EMAIL, NAV_LINKS } from "../../data/site";
+import { kicker } from "../../lib/styles";
+---
+
+<footer class="border-t border-line py-12">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="grid gap-10 md:grid-cols-12">
+      <div class="md:col-span-6">
+        <div class="flex items-center gap-3">
+          <Image
+            src={logoLight}
+            alt="EuroTech Federation logo"
+            class="size-10"
+            width={80}
+          />
+          <div class="font-semibold tracking-tight">
+            Europe Research Summer
+            <small class="block text-xs font-normal text-muted">
+              A programme by EuroTech Federation
+            </small>
+          </div>
+        </div>
+        <p class="mt-5 max-w-sm text-sm text-muted">
+          Original student AI research across 20+ European countries, reviewed
+          double-blind. One final in Paris.
+        </p>
+      </div>
+      <div class="md:col-span-3">
+        <h3 class={`mb-3 ${kicker}`}>Programme</h3>
+        {
+          NAV_LINKS.map((link) => (
+            <a
+              href={link.href}
+              class="block py-1.5 text-sm text-muted transition-colors duration-150 hover:text-body"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+      <div class="md:col-span-3">
+        <h3 class={`mb-3 ${kicker}`}>Contact</h3>
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          class="block py-1.5 text-sm break-all text-muted transition-colors duration-150 hover:text-body"
+        >
+          {CONTACT_EMAIL}
+        </a>
+        <a
+          href="https://eurotech-federation.com"
+          target="_blank"
+          rel="noopener"
+          class="block py-1.5 text-sm text-muted transition-colors duration-150 hover:text-body"
+        >
+          eurotech-federation.com
+        </a>
+        <a
+          href="/legal"
+          class="block py-1.5 text-sm text-muted transition-colors duration-150 hover:text-body"
+        >
+          Legal notice
+        </a>
+      </div>
+    </div>
+    <div
+      class="mt-10 flex flex-wrap justify-between gap-3 border-t border-line pt-6 font-mono text-[11px] tracking-[0.12em] text-muted uppercase"
+    >
+      <span>© 2026 EuroTech Federation. All rights reserved.</span>
+      <span>No cookies · Cookieless analytics</span>
+    </div>
+  </div>
+</footer>

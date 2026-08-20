@@ -1,0 +1,21 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# environment
+.env
+.env.*
+
+# OS / tooling
+.DS_Store
+.vercel/
+.playwright-mcp/
+fullpage.png
+
+# local agent tooling (not for the public repo)
+.superset/
+.impeccable/
+.claude/skills/

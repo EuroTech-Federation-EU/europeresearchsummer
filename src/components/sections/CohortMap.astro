@@ -1,0 +1,228 @@
+---
+import SectionHead from "../ui/SectionHead.astro";
+import europePaths from "../../assets/europe-paths.svg?raw";
+import { BUCKETS, COUNTRIES, bucketFor } from "../../data/cohort";
+
+const VIEWBOX = "130 265 375 470";
+
+const points = COUNTRIES.map((country) => ({
+  ...country,
+  rParticipants: country.participants ? bucketFor(country.participants).r : 0,
+  rReviewers: country.reviewers ? bucketFor(country.reviewers).r : 0,
+  labelParticipants: country.participants
+    ? bucketFor(country.participants).label
+    : "",
+  labelReviewers: country.reviewers ? bucketFor(country.reviewers).label : "",
+}));
+---
+
+<section id="cohort" class="py-20 md:py-28">
+  <div class="mx-auto max-w-6xl px-6">
+    <div data-reveal>
+      <SectionHead
+        eyebrowText="The cohort"
+        title="One programme, all of Europe."
+        lead="Participants and reviewers across 20+ countries."
+      />
+    </div>
+    <div
+      data-reveal
+      class="grid items-start gap-10 lg:grid-cols-[1fr_minmax(280px,0.55fr)]"
+    >
+      <div
+        class="relative rounded-xs border border-line bg-card/60 p-4 md:p-8"
+      >
+        <svg
+          id="cohort-map"
+          viewBox={VIEWBOX}
+          class="mx-auto w-full max-w-xl"
+          role="img"
+          aria-label="Map of Europe showing where participants and reviewers are based"
+        >
+          <g
+            class="[&_path]:fill-navy-soft [&_path]:stroke-line [&_path]:stroke-[0.6]"
+            set:html={europePaths}
+          />
+          <g>
+            {
+              points.map((point) => (
+                <circle
+                  class="cohort-dot cursor-pointer fill-cyan/25 stroke-cyan stroke-[1.5] hover:fill-cyan/50 focus:outline-none focus-visible:fill-cyan/50"
+                  cx={point.x}
+                  cy={point.y}
+                  r={point.rParticipants}
+                  opacity={point.participants ? 1 : 0}
+                  tabindex="0"
+                  role="img"
+                  data-name={point.name}
+                  data-rp={point.rParticipants}
+                  data-rr={point.rReviewers}
+                  data-lp={point.labelParticipants}
+                  data-lr={point.labelReviewers}
+                />
+              ))
+            }
+          </g>
+        </svg>
+        <div
+          id="map-tooltip"
+          class="pointer-events-none absolute z-10 origin-bottom-left scale-95 rounded-xs border border-line bg-navy px-3.5 py-2 font-mono text-xs tracking-[0.08em] uppercase opacity-0 transition-[opacity,transform] duration-150 ease-snap data-shown:scale-100 data-shown:opacity-100"
+        >
+        </div>
+      </div>
+      <div class="flex flex-col gap-8">
+        <div
+          id="map-toggle"
+          class="relative grid w-fit grid-cols-2 rounded-xs border border-line bg-card p-1"
+        >
+          <span
+            id="map-toggle-thumb"
+            class="absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-xs bg-cyan transition-transform duration-300 ease-glide"
+            aria-hidden="true"></span>
+          <button
+            data-mode="participants"
+            aria-pressed="true"
+            class="relative z-10 rounded-xs px-5 py-3.5 font-mono text-xs font-semibold tracking-[0.12em] text-navy uppercase transition-colors duration-200 ease-snap"
+          >
+            Participants
+          </button>
+          <button
+            data-mode="reviewers"
+            aria-pressed="false"
+            class="relative z-10 rounded-xs px-5 py-3.5 font-mono text-xs font-semibold tracking-[0.12em] text-muted uppercase transition-colors duration-200 ease-snap"
+          >
+            Reviewers
+          </button>
+        </div>
+        <div>
+          <h3
+            class="mb-4 font-mono text-xs tracking-[0.2em] text-muted uppercase"
+          >
+            Researchers per country
+          </h3>
+          <div class="flex items-end gap-6">
+            {
+              BUCKETS.map((bucket) => (
+                <div class="flex flex-col items-center gap-2">
+                  <svg
+                    width={bucket.r * 2 + 4}
+                    height={bucket.r * 2 + 4}
+                    class="overflow-visible"
+                  >
+                    <circle
+                      cx="50%"
+                      cy="50%"
+                      r={bucket.r}
+                      class="fill-cyan/25 stroke-cyan stroke-[1.5]"
+                    />
+                  </svg>
+                  <span class="text-xs text-muted">{bucket.label}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        <p id="map-note" class="text-sm text-muted">
+          103 selected participants across 20 countries, from 220 applicants
+          Europe-wide.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const NOTES: Record<string, string> = {
+    participants:
+      "103 selected participants across 20 countries, from 220 applicants Europe-wide.",
+    reviewers:
+      "65+ working researchers across 15 European countries, and one reviewing from the UAE.",
+  };
+  const WORDS: Record<string, string> = {
+    participants: "participants",
+    reviewers: "reviewers",
+  };
+  const NOTE_FADE_MS = 200;
+
+  let mode = "participants";
+  const dots = document.querySelectorAll<SVGCircleElement>(".cohort-dot");
+  const toggle = document.getElementById("map-toggle");
+  const thumb = document.getElementById("map-toggle-thumb");
+  const note = document.getElementById("map-note");
+  const tooltip = document.getElementById("map-tooltip");
+  const mapBox = document.getElementById("cohort-map")?.parentElement;
+
+  function labelFor(dot: SVGCircleElement) {
+    const label = mode === "participants" ? dot.dataset.lp : dot.dataset.lr;
+    return label ? `${dot.dataset.name} · ${label} ${WORDS[mode]}` : "";
+  }
+
+  function render() {
+    dots.forEach((dot) => {
+      const radius = Number(
+        mode === "participants" ? dot.dataset.rp : dot.dataset.rr,
+      );
+      dot.setAttribute("r", String(radius));
+      dot.setAttribute("opacity", radius ? "1" : "0");
+      dot.setAttribute("aria-label", labelFor(dot) || dot.dataset.name || "");
+      dot.setAttribute("tabindex", radius ? "0" : "-1");
+    });
+    if (note && note.textContent !== NOTES[mode]) {
+      note.textContent = NOTES[mode] ?? "";
+      note.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: NOTE_FADE_MS,
+        easing: "ease-out",
+      });
+    }
+  }
+
+  toggle?.querySelectorAll("button").forEach((button, index) => {
+    button.addEventListener("click", () => {
+      mode = button.dataset.mode ?? "participants";
+      if (thumb) {
+        thumb.style.transform = index === 0 ? "" : "translateX(100%)";
+      }
+      toggle.querySelectorAll("button").forEach((other) => {
+        const active = other === button;
+        other.setAttribute("aria-pressed", String(active));
+        other.classList.toggle("text-navy", active);
+        other.classList.toggle("text-muted", !active);
+      });
+      render();
+    });
+  });
+
+  function showTooltipAt(dot: SVGCircleElement, clientX: number, clientY: number) {
+    if (!tooltip || !mapBox) return;
+    const text = labelFor(dot);
+    if (!text) return;
+    tooltip.textContent = text;
+    const box = mapBox.getBoundingClientRect();
+    tooltip.style.left = `${clientX - box.left + 14}px`;
+    tooltip.style.top = `${clientY - box.top - 10}px`;
+    tooltip.dataset.shown = "";
+  }
+
+  function hideTooltip() {
+    if (tooltip) delete tooltip.dataset.shown;
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener("mousemove", (event) => {
+      showTooltipAt(dot, event.clientX, event.clientY);
+    });
+    dot.addEventListener("mouseleave", hideTooltip);
+    // Keyboard and touch: focusing or tapping a dot anchors the tooltip to it.
+    dot.addEventListener("focus", () => {
+      const box = dot.getBoundingClientRect();
+      showTooltipAt(dot, box.right, box.top);
+    });
+    dot.addEventListener("blur", hideTooltip);
+    dot.addEventListener("click", () => {
+      const box = dot.getBoundingClientRect();
+      showTooltipAt(dot, box.right, box.top);
+    });
+  });
+
+  render();
+</script>

@@ -1,0 +1,25 @@
+---
+import { CONTACT_EMAIL } from "../../data/site";
+import { btnPrimary, kicker } from "../../lib/styles";
+---
+
+<section id="contact" class="border-t border-line py-24 md:py-36">
+  <div data-reveal class="mx-auto max-w-6xl px-6 text-center">
+    <p class={kicker}>Get involved</p>
+    <h2
+      class="mx-auto mt-8 max-w-4xl text-4xl leading-[0.95] font-bold tracking-[-0.01em] text-body uppercase md:text-6xl"
+    >
+      Bring your AI society. Or back the programme.
+    </h2>
+    <p class="mx-auto mt-6 mb-10 max-w-xl text-lg text-muted">
+      AI societies join as community partners; companies and institutions
+      support with infrastructure, internships, and model access.
+    </p>
+    <a
+      href={`mailto:${CONTACT_EMAIL}?subject=Europe%20Research%20Summer%20—%20Get%20involved`}
+      class={btnPrimary}
+    >
+      Contact us
+    </a>
+  </div>
+</section>

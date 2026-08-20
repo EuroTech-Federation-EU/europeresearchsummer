@@ -1,0 +1,58 @@
+---
+// Discreet bottom-right notice about cookieless analytics. Informational
+// only: Vercel Web Analytics sets no cookies and stores no personal data,
+// so no consent gate is required. Dismissal persists in localStorage.
+---
+
+<aside
+  id="privacy-notice"
+  role="status"
+  class="fixed right-4 bottom-4 z-50 hidden w-64 translate-y-2 rounded-xs border border-line bg-card p-4 opacity-0 shadow-[0_16px_40px_-16px_rgb(0_0_0/0.6)] transition-[opacity,transform] duration-300 ease-snap data-shown:translate-y-0 data-shown:opacity-100"
+>
+  <p class="font-mono text-[10px] leading-relaxed tracking-[0.08em] text-muted uppercase">
+    We measure audience with cookieless analytics. No cookies, no personal
+    data. <a href="/legal" class="text-cyan hover:underline">Details</a>
+  </p>
+  <button
+    id="privacy-notice-ok"
+    type="button"
+    class="mt-3 w-full rounded-xs bg-body px-3 py-2 font-mono text-[10px] font-semibold tracking-[0.15em] text-navy uppercase transition-[transform,background-color] duration-150 ease-snap hover:bg-white active:scale-[0.97]"
+  >
+    OK
+  </button>
+</aside>
+
+<script>
+  const STORAGE_KEY = "privacy-notice-dismissed";
+  const SHOW_DELAY_MS = 1200;
+  const notice = document.getElementById("privacy-notice");
+  const okButton = document.getElementById("privacy-notice-ok");
+
+  let isDismissed = false;
+  try {
+    isDismissed = localStorage.getItem(STORAGE_KEY) === "1";
+  } catch {
+    // Storage unavailable (private mode): show the notice each visit.
+  }
+
+  if (notice && !isDismissed) {
+    setTimeout(() => {
+      notice.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        notice.dataset.shown = "";
+      });
+    }, SHOW_DELAY_MS);
+  }
+
+  okButton?.addEventListener("click", () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, "1");
+    } catch {
+      // Best effort only; the notice simply reappears next visit.
+    }
+    if (notice) {
+      delete notice.dataset.shown;
+      setTimeout(() => notice.classList.add("hidden"), 300);
+    }
+  });
+</script>
