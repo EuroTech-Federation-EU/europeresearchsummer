@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system,
+    sans-serif;
+
+  /* Brand tokens — locked in README.md */
+  --color-navy: #0f172a;
+  --color-navy-soft: #16213d;
+  --color-card: #131c33;
+  --color-cyan: #22d3ee;
+  --color-accent: #0069a9;
+  --color-indigo: #1b1a88;
+  --color-body: #e2e8f0;
+  --color-muted: #a5b4ce;
+  --color-line: rgb(226 232 240 / 0.12);
+
+  /* Light-world neutrals (navy is the ink; accent carries color) */
+  --color-paper: #ffffff;
+  --color-tint: #f5f7fa;
+  --color-ink-soft: #475569;
+  --color-hairline: rgb(15 23 42 / 0.1);
+
+  /* Motion — strong custom curves (built-in CSS easings are too weak) */
+  --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-glide: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Floating hover labels near the viewport edge must never create a
+   horizontal scrollbar; clip instead (never `hidden`, which would trap
+   sticky positioning and scroll anchoring). */
+body {
+  overflow-x: clip;
+}
+
+/* Visible keyboard focus everywhere — cyan reads against the navy ground. */
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Marquee — constant motion, linear by definition. Duplicated track content
+   scrolls by half its own width for a seamless loop; pauses on hover, and
+   stops entirely under reduced motion (the first copy remains readable).
+--------------------------------------------------------------------------- */
+.marquee {
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 45s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveal — decorative entrance, never blocks interaction.
+   Hidden state only applies once JS has run (html.js), so content is always
+   visible without JavaScript. Reduced motion keeps the fade, drops movement.
+--------------------------------------------------------------------------- */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 500ms var(--ease-snap),
+    transform 500ms var(--ease-snap);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js [data-reveal].is-inview {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] {
+    transform: none;
+    transition: opacity 300ms ease;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   FAQ — animated <details>. Progressive enhancement: browsers without
+   interpolate-size simply open instantly.
+--------------------------------------------------------------------------- */
+details.faq {
+  interpolate-size: allow-keywords;
+}
+
+details.faq::details-content {
+  block-size: 0;
+  overflow: clip;
+  opacity: 0;
+  transition:
+    block-size 300ms var(--ease-snap),
+    opacity 300ms var(--ease-snap),
+    content-visibility 300ms allow-discrete;
+}
+
+details.faq[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details.faq::details-content {
+    transition: opacity 200ms ease, content-visibility 200ms allow-discrete;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Cohort map — dots retarget smoothly when the toggle flips modes
+   (transitions, not keyframes: mode can be flipped rapidly).
+--------------------------------------------------------------------------- */
+.cohort-dot {
+  transition:
+    r 450ms var(--ease-glide),
+    opacity 300ms ease,
+    fill 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cohort-dot {
+    transition: opacity 200ms ease, fill 200ms ease;
+  }
+}

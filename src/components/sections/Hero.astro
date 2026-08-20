@@ -1,0 +1,112 @@
+---
+import { Image } from "astro:assets";
+import { PARTICIPANT_AFFILIATIONS } from "../../data/network";
+import { btnGhost, btnPrimary, kicker } from "../../lib/styles";
+
+const STAGGER_STEP_MS = 70;
+// Two copies of the list make the marquee loop seamless (track scrolls -50%).
+const MARQUEE_COPIES = [false, true] as const;
+---
+
+<section class="relative flex min-h-[calc(100svh-4rem)] flex-col justify-between">
+  <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true">
+  </div>
+  <div
+    class="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 py-16 text-center"
+  >
+    <p data-reveal class={kicker}>First edition · Summer 2026</p>
+    <h1
+      data-reveal
+      style={`--reveal-delay: ${STAGGER_STEP_MS}ms`}
+      class="mx-auto mt-8 text-[13vw] leading-[0.92] font-bold tracking-[-0.01em] text-body uppercase md:text-[clamp(5rem,8vw,8rem)]"
+    >
+      Europe Research Summer
+    </h1>
+    <p
+      data-reveal
+      style={`--reveal-delay: ${STAGGER_STEP_MS * 2}ms`}
+      class="mx-auto mt-7 max-w-3xl text-lg text-balance text-muted md:text-xl"
+    >
+      Where Europe's strongest student AI researchers surface. Original AI/ML
+      research, reviewed double-blind by working researchers. One final in
+      Paris.
+    </p>
+    <div
+      data-reveal
+      style={`--reveal-delay: ${STAGGER_STEP_MS * 3}ms`}
+      class="mt-10 flex flex-wrap justify-center gap-3"
+    >
+      <a href="#how-it-works" class={btnPrimary}>How it works</a>
+      <a href="#network" class={btnGhost}>Partner with us</a>
+    </div>
+  </div>
+
+  <div data-reveal style={`--reveal-delay: ${STAGGER_STEP_MS * 4}ms`} class="relative">
+    <p
+      class="px-6 pb-2 font-mono text-[10px] tracking-[0.18em] text-muted/80 uppercase sm:hidden"
+    >
+      Institutions our participants belong to
+    </p>
+    <div
+      class="marquee relative border-y border-line py-4"
+      aria-label="Institutions our participants belong to"
+    >
+      <div
+        class="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-stretch max-sm:hidden"
+        aria-hidden="true"
+      >
+        <span
+          class="flex w-64 items-center border-r border-line bg-navy px-6 font-mono text-[10px] leading-relaxed tracking-[0.15em] text-muted uppercase"
+        >
+          Institutions our participants belong to
+        </span>
+        <span class="w-16 bg-linear-to-r from-navy to-transparent"></span>
+      </div>
+      <div class="marquee-track">
+        {
+          MARQUEE_COPIES.map((isCopy) => (
+            <ul class="flex shrink-0 items-center" aria-hidden={isCopy}>
+              {PARTICIPANT_AFFILIATIONS.map((logo) => (
+                <li class="flex items-center gap-3 border-r border-line px-7">
+                  <span class="flex size-9 shrink-0 items-center justify-center rounded-xs bg-body p-1.5">
+                    <Image
+                      src={logo.src}
+                      alt=""
+                      width={80}
+                      class="max-h-6 w-auto max-w-full object-contain"
+                    />
+                  </span>
+                  <span class="font-mono text-[11px] whitespace-nowrap tracking-[0.15em] text-muted uppercase">
+                    {logo.alt}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Millimetre-paper texture: a fine grid plus a coarser one, faded out
+     toward the edges so it reads as texture, never as a component. */
+  .hero-grid {
+    background-image:
+      linear-gradient(rgb(226 232 240 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(226 232 240 / 0.04) 1px, transparent 1px),
+      linear-gradient(rgb(226 232 240 / 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(226 232 240 / 0.07) 1px, transparent 1px);
+    background-size:
+      44px 44px,
+      44px 44px,
+      220px 220px,
+      220px 220px;
+    mask-image: radial-gradient(
+      ellipse 95% 85% at 50% 35%,
+      black 35%,
+      transparent 100%
+    );
+  }
+</style>

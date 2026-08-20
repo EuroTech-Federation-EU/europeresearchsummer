@@ -1,0 +1,39 @@
+---
+import { Image } from "astro:assets";
+import type { Logo } from "../../data/network";
+
+interface Props {
+  title: string;
+  logos: Logo[];
+}
+
+const { title, logos } = Astro.props;
+---
+
+<div>
+  <h3 class="mb-6 font-mono text-xs tracking-[0.2em] text-muted uppercase">
+    {title}
+  </h3>
+  <div class="flex flex-wrap items-center gap-2.5">
+    {
+      logos.map((logo) => (
+        <div class="group relative" tabindex="0" aria-label={logo.alt}>
+          <div class="flex h-16 w-24 items-center justify-center rounded-xs bg-body/95 p-2.5 transition-transform duration-200 ease-snap group-hover:scale-105 group-focus-visible:scale-105">
+            <Image
+              src={logo.src}
+              alt={logo.alt}
+              width={160}
+              class="max-h-11 w-auto max-w-full object-contain grayscale transition-[filter] duration-200 ease-snap group-hover:grayscale-0 group-focus-visible:grayscale-0"
+            />
+          </div>
+          <span
+            class="pointer-events-none absolute -top-9 left-1/2 z-10 -translate-x-1/2 translate-y-1 rounded-xs border border-line bg-navy px-2.5 py-1.5 font-mono text-[10px] whitespace-nowrap tracking-[0.1em] text-body uppercase opacity-0 transition-[opacity,transform] duration-150 ease-snap group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+            aria-hidden="true"
+          >
+            {logo.alt}
+          </span>
+        </div>
+      ))
+    }
+  </div>
+</div>
