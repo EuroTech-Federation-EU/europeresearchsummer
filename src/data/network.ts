@@ -36,6 +36,7 @@ import epflAiTeam from "../assets/logos/societies/epfl-ai-team.svg";
 import ethAnalyticsClub from "../assets/logos/societies/eth-analytics-club.png";
 import fortyTwoAi from "../assets/logos/societies/42-ai.png";
 import bainsa from "../assets/logos/societies/bainsa.jpg";
+import rhizomeLabs from "../assets/logos/societies/rhizome-labs.png";
 import oxai from "../assets/logos/societies/oxai.png";
 import imperialAiGroup from "../assets/logos/societies/imperial-ai-group.png";
 
@@ -81,17 +82,18 @@ export const REVIEWER_AFFILIATIONS: Logo[] = [
   { src: bristol, alt: "University of Bristol" },
 ];
 
-// University AI societies partnering on the programme. `tone` picks the tile
-// background that matches each logo file (some have baked backgrounds).
-// `label` is the short name shown under the tile; `alt` stays the full name
-// screen readers announce.
-export interface SocietyLogo extends Logo {
+// Organisations partnering on the programme: university AI societies and the
+// labs and collectives that back them. `tone` picks the tile background that
+// matches each logo file (some have baked backgrounds). `label` is the short
+// name shown under the tile; `alt` stays the full name screen readers
+// announce.
+export interface CommunityPartner extends Logo {
   href: string;
   label: string;
   tone: "light" | "dark" | "panel";
 }
 
-export const SOCIETY_LOGOS: SocietyLogo[] = [
+export const COMMUNITY_PARTNERS: CommunityPartner[] = [
   { src: oxai, alt: "Oxford Artificial Intelligence Society", label: "Oxford AI Society", href: "https://www.oxai.org/", tone: "dark" },
   { src: ethAnalyticsClub, alt: "Analytics Club at ETH", label: "Analytics Club ETH", href: "https://www.analytics-club.org/", tone: "panel" },
   { src: epflAiTeam, alt: "EPFL AI Team", label: "EPFL AI Team", href: "https://epflaiteam.ch/", tone: "panel" },
@@ -99,5 +101,6 @@ export const SOCIETY_LOGOS: SocietyLogo[] = [
   { src: bainsa, alt: "BAINSA, Bocconi AI & Neuroscience Student Association", label: "BAINSA", href: "https://bainsa.ai/", tone: "dark" },
   { src: aaltoAi, alt: "Aalto AI", label: "Aalto AI", href: "https://www.aaltoai.com/", tone: "panel" },
   { src: fortyTwoAi, alt: "42 AI", label: "42 AI", href: "https://42-ai.github.io/", tone: "light" },
+  { src: rhizomeLabs, alt: "Rhizome Labs", label: "Rhizome Labs", href: "https://rhizome-labs.com", tone: "light" },
 ];
 
