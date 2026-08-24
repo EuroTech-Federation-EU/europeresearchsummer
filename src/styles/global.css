@@ -1,10 +1,49 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 @theme {
-  --font-sans: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system,
+  /* Space Grotesk is the proportional derivative of Space Mono: one skeleton
+     for the display type and the micro-labels. Self-hosted, so the rendering
+     is identical on every platform. */
+  --font-sans: "Space Grotesk", "Segoe UI", system-ui, -apple-system,
     sans-serif;
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Brand tokens — locked in README.md */
+  /* Tracking follows size: large type reads too loose as it grows, small type
+     needs the opposite. Three values, one per register, and nothing else:
+     display type, headings, and mono uppercase labels. */
+  --tracking-display: -0.03em;
+  --tracking-heading: -0.02em;
+  --tracking-label: 0.12em;
+
+  /* Type ramp. Every size the site uses is a named role here, and its leading
+     is bound to it so the two cannot drift apart. Nothing outside this list,
+     with one documented exception: the two wordmarks (hero, Paris) are sized
+     per instance because filling a column is a composition, not a ramp step.
+     Roles, not t-shirt sizes, so the right one is obvious at the call site.
+     Named `copy` and not `body`, which is already a colour token and would
+     collide on `text-body`. */
+  --text-label: 0.6875rem; /* mono uppercase: eyebrows, captions, chips */
+  --text-label--line-height: 1.5;
+  --text-ui: 0.875rem; /* nav, buttons, chrome */
+  --text-ui--line-height: 1.4;
+  --text-copy: 1.0625rem; /* running text */
+  --text-copy--line-height: 1.65;
+  --text-lede: 1.25rem; /* lead paragraphs */
+  --text-lede--line-height: 1.6;
+  --text-subtitle: 1.25rem; /* small block titles: same size as the lede,
+                               tighter leading because it is a title */
+  --text-subtitle--line-height: 1.3;
+  --text-title: 1.5rem; /* block titles: stages, research areas */
+  --text-title--line-height: 1.25;
+  --text-headline: 2.25rem; /* figures, and display titles on small screens */
+  --text-headline--line-height: 1.05;
+  --text-display: 3rem; /* section display titles */
+  --text-display--line-height: 0.95;
+  --text-display-lg: 3.75rem; /* the closing call to action */
+  --text-display-lg--line-height: 0.95;
+
+  /* Brand tokens, locked in README.md */
   --color-navy: #0f172a;
   --color-navy-soft: #16213d;
   --color-card: #131c33;
@@ -21,13 +60,31 @@
   --color-ink-soft: #475569;
   --color-hairline: rgb(15 23 42 / 0.1);
 
-  /* Motion — strong custom curves (built-in CSS easings are too weak) */
+  /* Motion: strong custom curves (built-in CSS easings are too weak) */
   --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-glide: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* ---------------------------------------------------------------------------
+   Paper scope: the one light region in the dark world. Rather than a second
+   set of utility classes, it rebinds the four ink tokens, so every child
+   already written against `text-body` / `text-muted` / `border-line` flips
+   with no markup change. Cyan hands over to the darker accent, which is what
+   that token was reserved for: the same working colour at a legible contrast
+   on white (#0069a9 on paper reads 5.4:1, cyan reads 1.7:1).
+--------------------------------------------------------------------------- */
+.on-paper {
+  --color-body: var(--color-navy);
+  --color-muted: var(--color-ink-soft);
+  --color-line: var(--color-hairline);
+  --color-cyan: var(--color-accent);
+
+  background-color: var(--color-paper);
+  color: var(--color-body);
 }
 
 /* Floating hover labels near the viewport edge must never create a
@@ -37,45 +94,39 @@ body {
   overflow-x: clip;
 }
 
-/* Visible keyboard focus everywhere — cyan reads against the navy ground. */
+/* Visible keyboard focus everywhere: cyan reads against the navy ground. */
 :focus-visible {
   outline: 2px solid var(--color-cyan);
   outline-offset: 2px;
 }
 
 /* ---------------------------------------------------------------------------
-   Marquee — constant motion, linear by definition. Duplicated track content
-   scrolls by half its own width for a seamless loop; pauses on hover, and
-   stops entirely under reduced motion (the first copy remains readable).
+   Photo grade: photographs are graded into the navy world instead of sitting
+   in framed boxes. A navy layer in `color` blend mode pulls the whole image
+   toward the ground colour, while the low opacity keeps what is worth keeping
+   (the warm lamps on the Paris bridge, the skin tones in the audience).
 --------------------------------------------------------------------------- */
-.marquee {
+.photo {
+  position: relative;
   overflow: hidden;
 }
 
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-scroll 45s linear infinite;
+.photo img {
+  filter: contrast(1.03) saturate(0.95);
 }
 
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes marquee-scroll {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
+.photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-navy);
+  mix-blend-mode: color;
+  opacity: 0.18;
+  pointer-events: none;
 }
 
 /* ---------------------------------------------------------------------------
-   Scroll reveal — decorative entrance, never blocks interaction.
+   Scroll reveal: decorative entrance, never blocks interaction.
    Hidden state only applies once JS has run (html.js), so content is always
    visible without JavaScript. Reduced motion keeps the fade, drops movement.
 --------------------------------------------------------------------------- */
@@ -83,8 +134,8 @@ html.js [data-reveal] {
   opacity: 0;
   transform: translateY(14px);
   transition:
-    opacity 500ms var(--ease-snap),
-    transform 500ms var(--ease-snap);
+    opacity 420ms var(--ease-snap),
+    transform 420ms var(--ease-snap);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -93,10 +144,29 @@ html.js [data-reveal].is-inview {
   transform: none;
 }
 
+/* Section rules draw themselves left to right rather than fading in. The
+   hairline is the structural element of this layout, so it gets the one
+   entrance that says what it is. */
+html.js [data-reveal][data-rule] {
+  opacity: 1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 700ms var(--ease-glide);
+}
+
+html.js [data-reveal][data-rule].is-inview {
+  transform: scaleX(1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.js [data-reveal] {
     transform: none;
     transition: opacity 300ms ease;
+  }
+
+  html.js [data-reveal][data-rule],
+  html.js [data-reveal][data-rule].is-inview {
+    transform: none;
   }
 
   html {
@@ -105,7 +175,7 @@ html.js [data-reveal].is-inview {
 }
 
 /* ---------------------------------------------------------------------------
-   FAQ — animated <details>. Progressive enhancement: browsers without
+   FAQ: animated <details>. Progressive enhancement: browsers without
    interpolate-size simply open instantly.
 --------------------------------------------------------------------------- */
 details.faq {
@@ -129,23 +199,23 @@ details.faq[open]::details-content {
 
 @media (prefers-reduced-motion: reduce) {
   details.faq::details-content {
-    transition: opacity 200ms ease, content-visibility 200ms allow-discrete;
+    transition: opacity 150ms ease, content-visibility 150ms allow-discrete;
   }
 }
 
 /* ---------------------------------------------------------------------------
-   Cohort map — dots retarget smoothly when the toggle flips modes
+   Cohort map: dots retarget smoothly when the toggle flips modes
    (transitions, not keyframes: mode can be flipped rapidly).
 --------------------------------------------------------------------------- */
 .cohort-dot {
   transition:
-    r 450ms var(--ease-glide),
+    r 300ms var(--ease-glide),
     opacity 300ms ease,
-    fill 200ms ease;
+    fill 150ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cohort-dot {
-    transition: opacity 200ms ease, fill 200ms ease;
+    transition: opacity 150ms ease, fill 150ms ease;
   }
 }

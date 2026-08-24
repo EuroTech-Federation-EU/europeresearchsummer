@@ -5,13 +5,20 @@
 // press (active:scale); transitions name exact properties.
 
 export const kicker =
-  "font-mono text-xs font-medium tracking-[0.2em] text-muted uppercase";
+  "font-mono text-label font-medium tracking-label text-muted uppercase";
+
+// Running text and small mono labels. Both name a step of the ramp in
+// `global.css`, which carries the leading, so neither can drift per component.
+export const bodyCopy = "text-copy text-muted";
+
+export const microLabel =
+  "font-mono text-label tracking-label text-muted uppercase";
 
 export const btnPrimary =
-  "inline-block rounded-xs bg-body px-6 py-3 font-mono text-sm font-semibold tracking-wider text-navy uppercase transition-[transform,background-color] duration-150 ease-snap hover:bg-white active:scale-[0.97]";
+  "inline-flex min-h-11 items-center justify-center rounded-xs bg-body px-6 py-3 font-mono text-ui font-semibold tracking-label text-navy uppercase transition-[transform,background-color] duration-150 ease-snap hover:bg-white active:scale-[0.97]";
 
 export const btnGhost =
-  "inline-block rounded-xs border border-line px-6 py-3 font-mono text-sm font-semibold tracking-wider text-body uppercase transition-[transform,border-color,background-color] duration-150 ease-snap hover:border-body/40 hover:bg-body/5 active:scale-[0.97]";
+  "inline-flex min-h-11 items-center justify-center rounded-xs border border-line px-6 py-3 font-mono text-ui font-semibold tracking-label text-body uppercase transition-[transform,border-color,background-color] duration-150 ease-snap hover:border-body/40 hover:bg-body/5 active:scale-[0.97]";
 
 export const displayTitle =
-  "text-4xl font-bold tracking-[-0.01em] text-body uppercase md:text-5xl md:leading-[0.95]";
+  "text-headline font-bold tracking-heading text-body uppercase md:text-display";

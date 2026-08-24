@@ -1,19 +1,19 @@
 export const FAQ = [
   {
     q: "Who can participate?",
-    a: "Students from undergraduate to PhD level, submitting original AI/ML research through their university AI society. If your society isn't onboarded yet, get in touch. More are joining.",
+    a: "You can, from undergraduate to PhD, as long as you submit original AI/ML research through your university AI society. If your society isn't onboarded yet, get in touch. More are joining.",
   },
   {
     q: "Is this a hackathon or a pitch competition?",
-    a: "Deliberately not. Participants submit research papers, reviewed double-blind by working researchers. The goal is to surface and connect Europe's strongest student AI talent early, and keep them oriented toward Europe.",
+    a: "Deliberately not. You submit a research paper, and working researchers review it double-blind. The point is to find Europe's strongest student AI researchers early, connect them to each other, and give them a reason to stay.",
   },
   {
     q: "How are papers reviewed?",
-    a: "Double-blind, by working researchers matched to each paper's field. Reviews are anonymous in both directions: nothing public ever links a person to a paper.",
+    a: "By working researchers matched to your field, double-blind. They never learn who wrote the paper, and you never learn who reviewed it. Nothing public ever links a person to a paper.",
   },
   {
     q: "What do winners get?",
-    a: "The strongest entry from each country presents live at the global final in Paris. The winner receives an internship with OVHai LLM; AWS provides compute support for the programme.",
+    a: "If your paper is the strongest in your country, you present live at the final in Paris. The winner receives an internship with OVHai LLM; AWS provides compute support for the programme.",
   },
   {
     q: "What is EuroTech Federation?",

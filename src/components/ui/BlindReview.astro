@@ -1,0 +1,79 @@
+---
+import { BLIND_REVIEW } from "../../data/program";
+import { bodyCopy } from "../../lib/styles";
+
+// The one mechanic the whole site is built around, drawn rather than asserted.
+// Both ends carry a redaction bar; the paper in the middle does not, because
+// the paper is the only thing anyone is allowed to see. Hairlines and mono
+// labels, same language as the rest of the page: no boxes, no icons.
+---
+
+<div class="blind-review grid border-t border-line md:grid-cols-3">
+  {
+    BLIND_REVIEW.map((step, index) => (
+      <div
+        class={`blind-cell relative border-b border-line p-6 md:border-b-0 ${index > 0 ? "md:border-l md:border-line" : ""}`}
+      >
+        <p class="font-mono text-label tracking-label text-muted uppercase">
+          {step.role}
+        </p>
+
+        {step.redacted ? (
+          <p class="mt-4 flex items-center gap-3">
+            <span class="redaction h-5 w-28 rounded-xs bg-muted/25" />
+            <span class="redaction-note font-mono text-label tracking-label text-cyan uppercase">
+              Never published
+            </span>
+          </p>
+        ) : (
+          <p class="mt-4 flex items-center gap-3">
+            <span class="h-5 w-28 rounded-xs bg-cyan/25 ring-1 ring-cyan/70 ring-inset" />
+            <span class="font-mono text-label tracking-label text-muted uppercase">
+              The only thing seen
+            </span>
+          </p>
+        )}
+
+        <p class={`mt-4 ${bodyCopy}`}>{step.text}</p>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  /* The note beside each redaction is the reward for looking, so it stays out
+     of the way until the row is hovered. It is always in the DOM and always
+     announced, so nothing is hidden from a screen reader or a keyboard user;
+     only the ink waits. Without a fine pointer it is simply always visible. */
+  .redaction-note {
+    opacity: 0;
+    transition: opacity 150ms var(--ease-snap);
+  }
+
+  .redaction {
+    transition: background-color 150ms var(--ease-snap);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .blind-cell:hover .redaction-note {
+      opacity: 1;
+    }
+
+    .blind-cell:hover .redaction {
+      background-color: color-mix(in srgb, var(--color-muted) 45%, transparent);
+    }
+  }
+
+  @media not all and (hover: hover) {
+    .redaction-note {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .redaction-note,
+    .redaction {
+      transition: none;
+    }
+  }
+</style>

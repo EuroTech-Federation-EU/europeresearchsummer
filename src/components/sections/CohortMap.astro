@@ -5,6 +5,15 @@ import { BUCKETS, COUNTRIES, bucketFor } from "../../data/cohort";
 
 const VIEWBOX = "130 265 375 470";
 
+// Invisible tap-target radius (viewBox units), independent of the visible
+// bucket radius. At ~390px viewport (0.91 CSS px / unit) this is a ~25.5px
+// diameter, well above the ~14.6px diameter of the smallest visible dot.
+// Kept below the 44px-target size (which would need r=24) because the
+// Ireland / UK / Belgium / Netherlands cluster sits only 17-40 viewBox
+// units apart: a bigger radius would make several neighbouring countries
+// steal each other's taps across the whole cluster instead of just one pair.
+const HIT_R = 14;
+
 const points = COUNTRIES.map((country) => ({
   ...country,
   rParticipants: country.participants ? bucketFor(country.participants).r : 0,
@@ -27,7 +36,7 @@ const points = COUNTRIES.map((country) => ({
     </div>
     <div
       data-reveal
-      class="grid items-start gap-10 lg:grid-cols-[1fr_minmax(280px,0.55fr)]"
+      class="grid items-start gap-10 lg:grid-cols-[minmax(0,28rem)_1fr]"
     >
       <div
         class="relative rounded-xs border border-line bg-card/60 p-4 md:p-8"
@@ -35,7 +44,7 @@ const points = COUNTRIES.map((country) => ({
         <svg
           id="cohort-map"
           viewBox={VIEWBOX}
-          class="mx-auto w-full max-w-xl"
+          class="mx-auto w-full max-w-sm"
           role="img"
           aria-label="Map of Europe showing where participants and reviewers are based"
         >
@@ -46,27 +55,38 @@ const points = COUNTRIES.map((country) => ({
           <g>
             {
               points.map((point) => (
-                <circle
-                  class="cohort-dot cursor-pointer fill-cyan/25 stroke-cyan stroke-[1.5] hover:fill-cyan/50 focus:outline-none focus-visible:fill-cyan/50"
-                  cx={point.x}
-                  cy={point.y}
-                  r={point.rParticipants}
-                  opacity={point.participants ? 1 : 0}
-                  tabindex="0"
-                  role="img"
-                  data-name={point.name}
-                  data-rp={point.rParticipants}
-                  data-rr={point.rReviewers}
-                  data-lp={point.labelParticipants}
-                  data-lr={point.labelReviewers}
-                />
+                <>
+                  <circle
+                    class="cohort-dot-hit cursor-pointer"
+                    cx={point.x}
+                    cy={point.y}
+                    r={HIT_R}
+                    fill="transparent"
+                    pointer-events="all"
+                    aria-hidden="true"
+                  />
+                  <circle
+                    class="cohort-dot cursor-pointer fill-cyan/25 stroke-cyan stroke-[1.5] hover:fill-cyan/50 focus:outline-none focus-visible:fill-cyan/50"
+                    cx={point.x}
+                    cy={point.y}
+                    r={point.rParticipants}
+                    opacity={point.participants ? 1 : 0}
+                    tabindex="0"
+                    role="img"
+                    data-name={point.name}
+                    data-rp={point.rParticipants}
+                    data-rr={point.rReviewers}
+                    data-lp={point.labelParticipants}
+                    data-lr={point.labelReviewers}
+                  />
+                </>
               ))
             }
           </g>
         </svg>
         <div
           id="map-tooltip"
-          class="pointer-events-none absolute z-10 origin-bottom-left scale-95 rounded-xs border border-line bg-navy px-3.5 py-2 font-mono text-xs tracking-[0.08em] uppercase opacity-0 transition-[opacity,transform] duration-150 ease-snap data-shown:scale-100 data-shown:opacity-100"
+          class="pointer-events-none absolute z-10 origin-bottom-left scale-95 rounded-xs border border-line bg-navy px-3.5 py-2 font-mono text-label tracking-label uppercase opacity-0 transition-[opacity,transform] duration-150 ease-snap data-shown:scale-100 data-shown:opacity-100"
         >
         </div>
       </div>
@@ -77,26 +97,26 @@ const points = COUNTRIES.map((country) => ({
         >
           <span
             id="map-toggle-thumb"
-            class="absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-xs bg-cyan transition-transform duration-300 ease-glide"
+            class="absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-xs bg-cyan transition-transform duration-150 ease-glide"
             aria-hidden="true"></span>
           <button
             data-mode="participants"
             aria-pressed="true"
-            class="relative z-10 rounded-xs px-5 py-3.5 font-mono text-xs font-semibold tracking-[0.12em] text-navy uppercase transition-colors duration-200 ease-snap"
+            class="relative z-10 rounded-xs px-5 py-3.5 font-mono text-label font-semibold tracking-label text-navy uppercase transition-[color,transform] duration-150 ease-snap active:scale-[0.97]"
           >
             Participants
           </button>
           <button
             data-mode="reviewers"
             aria-pressed="false"
-            class="relative z-10 rounded-xs px-5 py-3.5 font-mono text-xs font-semibold tracking-[0.12em] text-muted uppercase transition-colors duration-200 ease-snap"
+            class="relative z-10 rounded-xs px-5 py-3.5 font-mono text-label font-semibold tracking-label text-muted uppercase transition-[color,transform] duration-150 ease-snap active:scale-[0.97]"
           >
             Reviewers
           </button>
         </div>
         <div>
           <h3
-            class="mb-4 font-mono text-xs tracking-[0.2em] text-muted uppercase"
+            class="mb-4 font-mono text-label tracking-label text-muted uppercase"
           >
             Researchers per country
           </h3>
@@ -116,13 +136,13 @@ const points = COUNTRIES.map((country) => ({
                       class="fill-cyan/25 stroke-cyan stroke-[1.5]"
                     />
                   </svg>
-                  <span class="text-xs text-muted">{bucket.label}</span>
+                  <span class="font-mono text-label text-muted">{bucket.label}</span>
                 </div>
               ))
             }
           </div>
         </div>
-        <p id="map-note" class="text-sm text-muted">
+        <p id="map-note" class="text-copy text-muted">
           103 selected participants across 20 countries, from 220 applicants
           Europe-wide.
         </p>
@@ -146,6 +166,7 @@ const points = COUNTRIES.map((country) => ({
 
   let mode = "participants";
   const dots = document.querySelectorAll<SVGCircleElement>(".cohort-dot");
+  const hitDots = document.querySelectorAll<SVGCircleElement>(".cohort-dot-hit");
   const toggle = document.getElementById("map-toggle");
   const thumb = document.getElementById("map-toggle-thumb");
   const note = document.getElementById("map-note");
@@ -207,7 +228,7 @@ const points = COUNTRIES.map((country) => ({
     if (tooltip) delete tooltip.dataset.shown;
   }
 
-  dots.forEach((dot) => {
+  dots.forEach((dot, index) => {
     dot.addEventListener("mousemove", (event) => {
       showTooltipAt(dot, event.clientX, event.clientY);
     });
@@ -219,6 +240,21 @@ const points = COUNTRIES.map((country) => ({
     });
     dot.addEventListener("blur", hideTooltip);
     dot.addEventListener("click", () => {
+      const box = dot.getBoundingClientRect();
+      showTooltipAt(dot, box.right, box.top);
+    });
+
+    // The larger invisible hit circle forwards the same interactions to the
+    // visible dot it sits above, so a thumb landing near (not exactly on) a
+    // small dot still gets the right tooltip. It carries no tabindex: it
+    // only widens the pointer/touch target, keyboard tab order is untouched.
+    const hit = hitDots[index];
+    if (!hit) return;
+    hit.addEventListener("mousemove", (event) => {
+      showTooltipAt(dot, event.clientX, event.clientY);
+    });
+    hit.addEventListener("mouseleave", hideTooltip);
+    hit.addEventListener("click", () => {
       const box = dot.getBoundingClientRect();
       showTooltipAt(dot, box.right, box.top);
     });

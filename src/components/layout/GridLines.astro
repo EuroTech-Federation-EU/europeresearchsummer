@@ -1,0 +1,31 @@
+---
+// Column rules behind the masthead. Hero only, on purpose: the rules read as
+// a frame when they surround a single large object with room around it. Run
+// behind dense content they stop being structure and become a cage, which is
+// also why they fade out before the content below.
+
+const COLUMN_RULES = [0, 1, 2, 3, 4, 5, 6] as const;
+// Six columns on desktop; on a phone that is a rule every 57px, which reads as
+// noise rather than structure, so only the edges and the centre survive.
+const NARROW_SCREEN_RULES = [0, 3, 6];
+---
+
+<div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true">
+  <div class="mx-auto flex h-full max-w-6xl justify-between px-6">
+    {
+      COLUMN_RULES.map((rule) => (
+        <span
+          class={`w-px bg-line/70 ${NARROW_SCREEN_RULES.includes(rule) ? "" : "max-sm:hidden"}`}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* Fade out downward so the rules frame the wordmark and release the lede
+     and the actions below it. */
+  .hero-grid {
+    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  }
+</style>

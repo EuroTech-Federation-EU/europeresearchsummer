@@ -16,14 +16,14 @@ import { kicker } from "../../lib/styles";
             class="size-10"
             width={80}
           />
-          <div class="font-semibold tracking-tight">
+          <div class="text-copy font-semibold tracking-heading">
             Europe Research Summer
-            <small class="block text-xs font-normal text-muted">
+            <small class="block text-ui font-normal text-muted">
               A programme by EuroTech Federation
             </small>
           </div>
         </div>
-        <p class="mt-5 max-w-sm text-sm text-muted">
+        <p class="mt-5 max-w-sm text-ui text-muted">
           Original student AI research across 20+ European countries, reviewed
           double-blind. One final in Paris.
         </p>
@@ -34,7 +34,7 @@ import { kicker } from "../../lib/styles";
           NAV_LINKS.map((link) => (
             <a
               href={link.href}
-              class="block py-1.5 text-sm text-muted transition-colors duration-150 hover:text-body"
+              class="flex min-h-11 items-center text-ui text-muted transition-colors duration-150 hover:text-body"
             >
               {link.label}
             </a>
@@ -45,7 +45,7 @@ import { kicker } from "../../lib/styles";
         <h3 class={`mb-3 ${kicker}`}>Contact</h3>
         <a
           href={`mailto:${CONTACT_EMAIL}`}
-          class="block py-1.5 text-sm break-all text-muted transition-colors duration-150 hover:text-body"
+          class="flex min-h-11 items-center py-1.5 text-ui break-all text-muted transition-colors duration-150 hover:text-body"
         >
           {CONTACT_EMAIL}
         </a>
@@ -53,20 +53,20 @@ import { kicker } from "../../lib/styles";
           href="https://eurotech-federation.com"
           target="_blank"
           rel="noopener"
-          class="block py-1.5 text-sm text-muted transition-colors duration-150 hover:text-body"
+          class="flex min-h-11 items-center text-ui text-muted transition-colors duration-150 hover:text-body"
         >
           eurotech-federation.com
         </a>
         <a
           href="/legal"
-          class="block py-1.5 text-sm text-muted transition-colors duration-150 hover:text-body"
+          class="flex min-h-11 items-center text-ui text-muted transition-colors duration-150 hover:text-body"
         >
           Legal notice
         </a>
       </div>
     </div>
     <div
-      class="mt-10 flex flex-wrap justify-between gap-3 border-t border-line pt-6 font-mono text-[11px] tracking-[0.12em] text-muted uppercase"
+      class="mt-10 flex flex-wrap justify-between gap-3 border-t border-line pt-6 font-mono text-label tracking-label text-muted uppercase"
     >
       <span>© 2026 EuroTech Federation. All rights reserved.</span>
       <span>No cookies · Cookieless analytics</span>

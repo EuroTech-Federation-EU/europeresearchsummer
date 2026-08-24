@@ -1,4 +1,4 @@
-// Legal notice content. Factual only — publisher, hosting, data practices.
+// Legal notice content. Factual only: publisher, hosting, data practices.
 import { CONTACT_EMAIL } from "./site";
 
 export const LEGAL_SECTIONS = [

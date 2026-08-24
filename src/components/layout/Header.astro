@@ -1,30 +1,40 @@
 ---
 import { Image } from "astro:assets";
+import logoDark from "../../assets/logo-dark.png";
 import logoLight from "../../assets/logo-light.png";
 import { NAV_LINKS } from "../../data/site";
 ---
 
 <header
-  class="sticky top-0 z-50 border-b border-line bg-navy/80 backdrop-blur-xl"
+  id="site-header"
+  class="site-header sticky top-0 z-50 transition-[background-color,border-color] duration-150 ease-snap"
 >
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-    <a href="/#top" class="flex items-center gap-3">
-      <Image src={logoLight} alt="EuroTech Federation logo" class="size-9" width={72} />
-      <span class="font-semibold tracking-tight">
+    <a href="/#top" class="group flex min-h-11 items-center gap-3.5">
+      <Image
+        src={logoLight}
+        alt="EuroTech Federation logo"
+        class="site-logo site-logo-light size-10 shrink-0"
+        width={80}
+      />
+      <Image
+        src={logoDark}
+        alt=""
+        class="site-logo site-logo-dark size-10 shrink-0"
+        width={80}
+      />
+      <span
+        class="site-wordmark border-l border-line pl-3.5 text-ui font-bold tracking-heading text-body"
+      >
         Europe Research Summer
-        <small
-          class="block font-mono text-[10px] font-medium tracking-[0.18em] text-muted uppercase"
-        >
-          by EuroTech Federation
-        </small>
       </span>
     </a>
-    <nav class="hidden items-center gap-6 md:flex" aria-label="Main">
+    <nav class="hidden items-center gap-7 md:flex" aria-label="Main">
       {
         NAV_LINKS.map((link) => (
           <a
             href={link.href}
-            class="font-mono text-xs tracking-[0.15em] text-muted uppercase transition-colors duration-150 hover:text-body"
+            class="nav-link inline-flex min-h-11 items-center text-ui text-muted transition-colors duration-150 hover:text-body"
           >
             {link.label}
           </a>
@@ -32,7 +42,7 @@ import { NAV_LINKS } from "../../data/site";
       }
       <a
         href="/#contact"
-        class="rounded-xs bg-body px-4 py-2.5 font-mono text-xs font-semibold tracking-[0.15em] text-navy uppercase transition-[transform,background-color] duration-150 ease-snap hover:bg-white active:scale-[0.97]"
+        class="inline-flex min-h-11 items-center justify-center rounded-xs bg-body px-4 py-2 text-ui font-semibold text-navy transition-[transform,background-color] duration-150 ease-snap hover:bg-white active:scale-[0.97]"
       >
         Get involved
       </a>
@@ -68,7 +78,7 @@ import { NAV_LINKS } from "../../data/site";
       NAV_LINKS.map((link) => (
         <a
           href={link.href}
-          class="block rounded-xs px-2 py-3 font-mono text-sm tracking-[0.15em] text-body uppercase transition-colors duration-150 hover:bg-body/5"
+          class="flex min-h-11 items-center rounded-xs px-2 text-copy text-body transition-colors duration-150 hover:bg-body/5"
         >
           {link.label}
         </a>
@@ -76,22 +86,125 @@ import { NAV_LINKS } from "../../data/site";
     }
     <a
       href="/#contact"
-      class="mt-3 block rounded-xs bg-body px-5 py-3 text-center font-mono text-sm font-semibold tracking-[0.15em] text-navy uppercase active:scale-[0.98]"
+      class="mt-3 block rounded-xs bg-body px-5 py-3 text-center text-copy font-semibold text-navy active:scale-[0.98]"
     >
       Get involved
     </a>
   </nav>
 </header>
 
+<style>
+  /* Nothing under the header until there is something to separate it from.
+     Over the masthead it is invisible chrome; once content scrolls beneath,
+     the material and its hairline fade in. */
+  .site-header {
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-header[data-scrolled] {
+    background-color: color-mix(in srgb, var(--color-navy) 80%, transparent);
+    border-bottom-color: var(--color-line);
+    backdrop-filter: blur(24px);
+  }
+
+  /* Over the paper section (`#network`), the navy-tinted glass reads as a
+     muddy grey against the white ground. Swap in a paper-toned material and
+     restate the chrome ink in navy, so the header is deliberate in both
+     worlds instead of blending into neither. */
+  .site-header[data-material="paper"][data-scrolled] {
+    background-color: color-mix(in srgb, var(--color-paper) 85%, transparent);
+    border-bottom-color: var(--color-hairline);
+  }
+
+  .site-header[data-material="paper"] .site-wordmark {
+    color: var(--color-navy);
+    border-color: var(--color-hairline);
+  }
+
+  .site-header[data-material="paper"] .nav-link {
+    color: var(--color-ink-soft);
+  }
+
+  .site-header[data-material="paper"] .nav-link:hover {
+    color: var(--color-navy);
+  }
+
+  .site-header[data-material="paper"] #menu-button {
+    color: var(--color-navy);
+  }
+
+  /* The brand ships two marks. Swap to the one drawn for a light ground rather
+     than inverting the navy one, which turned the fine star geometry into a
+     blot. Both are in the DOM so the exchange costs no request at swap time;
+     the dark mark is `alt=""` because the light one already names the brand. */
+  .site-logo-dark {
+    display: none;
+  }
+
+  .site-header[data-material="paper"] .site-logo-light {
+    display: none;
+  }
+
+  .site-header[data-material="paper"] .site-logo-dark {
+    display: block;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .site-header[data-scrolled] {
+      background-color: var(--color-navy);
+      backdrop-filter: none;
+    }
+
+    .site-header[data-material="paper"][data-scrolled] {
+      background-color: var(--color-paper);
+    }
+  }
+</style>
+
 <script>
   const button = document.getElementById("menu-button");
   const menu = document.getElementById("mobile-menu");
+  const header = document.getElementById("site-header");
+  // Enough scroll that content is genuinely passing under the bar, not a
+  // rubber-band twitch at the very top.
+  const SCROLLED_THRESHOLD_PX = 24;
+  // Matches the header's own h-16 (64px): the row of the page the sticky
+  // bar actually sits over.
+  const HEADER_HEIGHT_PX = 64;
+  const paperSection = document.querySelector<HTMLElement>(".on-paper");
+
+  function isPaperUnderHeader(): boolean {
+    if (!paperSection) return false;
+    const rect = paperSection.getBoundingClientRect();
+    return rect.top <= HEADER_HEIGHT_PX && rect.bottom >= HEADER_HEIGHT_PX;
+  }
+
+  function syncHeaderMaterial() {
+    if (!header) return;
+    const isOpen = button?.getAttribute("aria-expanded") === "true";
+    const isScrolled = window.scrollY > SCROLLED_THRESHOLD_PX;
+    if (isPaperUnderHeader()) {
+      header.dataset.material = "paper";
+    } else {
+      delete header.dataset.material;
+    }
+    if (isScrolled || isOpen) {
+      header.dataset.scrolled = "";
+      return;
+    }
+    delete header.dataset.scrolled;
+  }
+
+  window.addEventListener("scroll", syncHeaderMaterial, { passive: true });
+  syncHeaderMaterial();
 
   function setMenu(isOpen: boolean) {
     if (!button || !menu) return;
     button.setAttribute("aria-expanded", String(isOpen));
     button.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
     menu.classList.toggle("hidden", !isOpen);
+    syncHeaderMaterial();
     button.querySelector(".menu-icon-open")?.classList.toggle("hidden", isOpen);
     button
       .querySelector(".menu-icon-close")
