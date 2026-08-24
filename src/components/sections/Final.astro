@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import { FINAL_POINTS } from "../../data/program";
-import { kicker } from "../../lib/styles";
+import { bodyCopy, kicker } from "../../lib/styles";
 import parisBridge from "../../assets/photos/paris-bridge.jpg";
 import finalAudience from "../../assets/photos/final-audience.jpg";
 
@@ -14,35 +14,33 @@ const STAGGER_STEP_MS = 70;
     <h2
       data-reveal
       style={`--reveal-delay: ${STAGGER_STEP_MS}ms`}
-      class="final-wordmark mt-6 text-[26vw] leading-none font-bold tracking-[-0.01em] uppercase select-none md:text-[12rem]"
+      class="final-wordmark mt-6 text-[26vw] leading-none font-bold tracking-display uppercase select-none md:text-[12rem]"
       aria-label="Paris"
     >
-      Paris
+      <span class="wordmark-outline" aria-hidden="true">Paris</span>
+      <span class="wordmark-fill" aria-hidden="true">Paris</span>
     </h2>
-    <div class="mt-6 grid gap-5 md:grid-cols-3">
-      <figure
-        data-reveal
-        class="overflow-hidden rounded-xs border border-line md:col-span-2"
-      >
+    <div class="mt-6 grid gap-px md:grid-cols-3">
+      <figure data-reveal class="photo md:col-span-2">
         <Image
           src={parisBridge}
           alt="Pont Alexandre III in Paris at dusk"
           widths={[800, 1600]}
           sizes="(max-width: 768px) 100vw, 736px"
-          class="h-72 w-full object-cover saturate-[0.85] md:h-96"
+          class="h-72 w-full object-cover md:h-96"
         />
       </figure>
       <figure
         data-reveal
         style={`--reveal-delay: ${STAGGER_STEP_MS}ms`}
-        class="overflow-hidden rounded-xs border border-line max-md:hidden"
+        class="photo max-md:hidden"
       >
         <Image
           src={finalAudience}
           alt="Audience in a dark auditorium"
           widths={[600, 1200]}
           sizes="352px"
-          class="h-96 w-full object-cover saturate-[0.85]"
+          class="h-96 w-full object-cover"
         />
       </figure>
     </div>
@@ -54,10 +52,10 @@ const STAGGER_STEP_MS = 70;
             style={`--reveal-delay: ${index * STAGGER_STEP_MS}ms`}
             class={`md:px-8 ${index > 0 ? "md:border-l md:border-line" : "md:pl-0"}`}
           >
-            <h3 class="font-mono text-xs tracking-[0.2em] text-cyan uppercase">
+            <h3 class="font-mono text-label tracking-label text-cyan uppercase">
               {point.title}
             </h3>
-            <p class="mt-4 text-muted">{point.text}</p>
+            <p class={`mt-4 ${bodyCopy}`}>{point.text}</p>
           </div>
         ))
       }
@@ -66,15 +64,70 @@ const STAGGER_STEP_MS = 70;
 </section>
 
 <style>
-  /* Outlined display word: ink is the stroke, the ground shows through. */
+  /* The one authored moment on the page. The word sits in outline, the ground
+     showing through, and fills solid from left to right as the section
+     arrives: Paris is where the programme lands, so the word lands too.
+     Two stacked copies, the filled one revealed by a clip-path wipe. Both are
+     aria-hidden; the heading carries the accessible name. */
   .final-wordmark {
+    position: relative;
+    /* Shrink to the word, not the column: a percentage clip-path measures the
+       element box, so a full-width box would spend half the wipe travelling
+       through empty space to the right of the word. */
+    display: block;
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .wordmark-outline,
+  .wordmark-fill {
+    display: block;
+  }
+
+  .wordmark-outline {
     color: transparent;
     -webkit-text-stroke: 1.5px var(--color-body);
   }
 
+  .wordmark-fill {
+    position: absolute;
+    inset: 0;
+    color: var(--color-body);
+    /* Hidden by default so it can never flash solid before the wipe runs. */
+    clip-path: inset(0 100% 0 0);
+  }
+
+  html.js .final-wordmark[data-reveal] .wordmark-fill {
+    transition: clip-path 1100ms var(--ease-glide);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  html.js .final-wordmark[data-reveal].is-inview .wordmark-fill {
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* Without JS the wipe never runs, so show the word solid rather than leave
+     a bare outline that was meant to be a starting state. */
+  html:not(.js) .wordmark-fill {
+    clip-path: inset(0 0 0 0);
+  }
+
   @media (min-width: 768px) {
-    .final-wordmark {
+    .wordmark-outline {
       -webkit-text-stroke-width: 2px;
+    }
+  }
+
+  /* Reduced motion keeps the arrival, drops the travel. */
+  @media (prefers-reduced-motion: reduce) {
+    html.js .final-wordmark[data-reveal] .wordmark-fill {
+      transition: opacity 300ms ease;
+      clip-path: inset(0 0 0 0);
+      opacity: 0;
+    }
+
+    html.js .final-wordmark[data-reveal].is-inview .wordmark-fill {
+      opacity: 1;
     }
   }
 </style>

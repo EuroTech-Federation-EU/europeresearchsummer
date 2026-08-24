@@ -17,7 +17,7 @@ import { EUROTECH_SIGNALS } from "../../data/program";
         <ul class="grid gap-4">
           {
             EUROTECH_SIGNALS.map((item) => (
-              <li class="flex items-start gap-3.5 text-muted">
+              <li class="flex items-start gap-3.5 text-copy text-muted">
                 <span
                   class="mt-1.5 size-1.5 shrink-0 bg-cyan"
                   aria-hidden="true"
@@ -30,7 +30,7 @@ import { EUROTECH_SIGNALS } from "../../data/program";
       </div>
       <div
         data-reveal
-        style="--reveal-delay: 100ms"
+        style="--reveal-delay: 70ms"
         class="rounded-xs border border-line bg-card/60 px-10 py-14 text-center"
       >
         <a
@@ -44,13 +44,13 @@ import { EUROTECH_SIGNALS } from "../../data/program";
             src={logoLight}
             alt="EuroTech Federation logo"
             width={280}
-            class="mx-auto h-28 w-auto transition-transform duration-200 ease-snap group-hover:scale-105"
+            class="mx-auto h-28 w-auto transition-opacity duration-150 ease-snap group-hover:opacity-80"
           />
         </a>
-        <h3 class="mb-2 text-lg font-semibold tracking-tight">
+        <h3 class="mb-2 text-subtitle font-semibold tracking-heading">
           Advised at the highest level.
         </h3>
-        <p class="text-muted">
+        <p class="text-copy text-muted">
           Advised by a former President of the European Research Council, with
           65+ researchers connected in the jury network.
         </p>

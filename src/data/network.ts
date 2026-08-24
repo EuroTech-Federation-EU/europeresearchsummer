@@ -7,6 +7,7 @@ import aws from "../assets/logos/aws.png";
 import bristol from "../assets/logos/bristol.png";
 import cambridge from "../assets/logos/cambridge.png";
 import centralesupelec from "../assets/logos/centralesupelec.png";
+import cnrs from "../assets/logos/cnrs.svg";
 import dtu from "../assets/logos/dtu.png";
 import epfl from "../assets/logos/epfl.png";
 import harvard from "../assets/logos/harvard.png";
@@ -56,6 +57,7 @@ export const PARTICIPANT_AFFILIATIONS: Logo[] = [
   { src: tum, alt: "Technical University of Munich" },
   { src: centralesupelec, alt: "CentraleSupélec" },
   { src: parisSaclay, alt: "Université Paris-Saclay" },
+  { src: cnrs, alt: "CNRS" },
   { src: tudelft, alt: "TU Delft" },
   { src: kuleuven, alt: "KU Leuven" },
   { src: uva, alt: "University of Amsterdam" },
@@ -81,18 +83,21 @@ export const REVIEWER_AFFILIATIONS: Logo[] = [
 
 // University AI societies partnering on the programme. `tone` picks the tile
 // background that matches each logo file (some have baked backgrounds).
+// `label` is the short name shown under the tile; `alt` stays the full name
+// screen readers announce.
 export interface SocietyLogo extends Logo {
   href: string;
+  label: string;
   tone: "light" | "dark" | "panel";
 }
 
 export const SOCIETY_LOGOS: SocietyLogo[] = [
-  { src: oxai, alt: "Oxford Artificial Intelligence Society", href: "https://www.oxai.org/", tone: "dark" },
-  { src: ethAnalyticsClub, alt: "Analytics Club at ETH", href: "https://www.analytics-club.org/", tone: "panel" },
-  { src: epflAiTeam, alt: "EPFL AI Team", href: "https://epflaiteam.ch/", tone: "panel" },
-  { src: imperialAiGroup, alt: "Imperial AI Group", href: "https://aiimperial-5c431d8c8891.herokuapp.com/", tone: "light" },
-  { src: bainsa, alt: "BAINSA — Bocconi AI & Neuroscience Student Association", href: "https://bainsa.ai/", tone: "dark" },
-  { src: aaltoAi, alt: "Aalto AI", href: "https://www.aaltoai.com/", tone: "panel" },
-  { src: fortyTwoAi, alt: "42 AI", href: "https://42-ai.github.io/", tone: "light" },
+  { src: oxai, alt: "Oxford Artificial Intelligence Society", label: "Oxford AI Society", href: "https://www.oxai.org/", tone: "dark" },
+  { src: ethAnalyticsClub, alt: "Analytics Club at ETH", label: "Analytics Club ETH", href: "https://www.analytics-club.org/", tone: "panel" },
+  { src: epflAiTeam, alt: "EPFL AI Team", label: "EPFL AI Team", href: "https://epflaiteam.ch/", tone: "panel" },
+  { src: imperialAiGroup, alt: "Imperial AI Group", label: "Imperial AI Group", href: "https://aiimperial-5c431d8c8891.herokuapp.com/", tone: "light" },
+  { src: bainsa, alt: "BAINSA, Bocconi AI & Neuroscience Student Association", label: "BAINSA", href: "https://bainsa.ai/", tone: "dark" },
+  { src: aaltoAi, alt: "Aalto AI", label: "Aalto AI", href: "https://www.aaltoai.com/", tone: "panel" },
+  { src: fortyTwoAi, alt: "42 AI", label: "42 AI", href: "https://42-ai.github.io/", tone: "light" },
 ];
 

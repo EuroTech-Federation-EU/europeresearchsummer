@@ -10,8 +10,10 @@ interface Props {
 const { eyebrowText, title, lead } = Astro.props;
 ---
 
-<div class="mb-14 border-t border-line pt-5">
-  <p class={kicker}>{eyebrowText}</p>
+<div class="mb-14">
+  <span data-reveal data-rule class="block h-px w-full bg-line" aria-hidden="true"
+  ></span>
+  <p class={`pt-5 ${kicker}`}>{eyebrowText}</p>
   <h2 class={`mt-8 max-w-3xl ${displayTitle}`}>{title}</h2>
-  {lead && <p class="mt-5 max-w-2xl text-lg text-muted">{lead}</p>}
+  {lead && <p class="mt-5 max-w-2xl text-lede text-muted">{lead}</p>}
 </div>

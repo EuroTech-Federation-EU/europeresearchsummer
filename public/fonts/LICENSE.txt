@@ -1,0 +1,10 @@
+Space Grotesk — Florian Karsten, SIL Open Font License 1.1
+https://fonts.google.com/specimen/Space+Grotesk
+
+Space Mono — Colophon Foundry, SIL Open Font License 1.1
+https://fonts.google.com/specimen/Space+Mono
+
+Full licence text: https://openfontlicense.org/open-font-license-official-text/
+
+The .woff2 files here are the latin and latin-ext subsets published by
+Google Fonts, copied into this repository so no request leaves the origin.

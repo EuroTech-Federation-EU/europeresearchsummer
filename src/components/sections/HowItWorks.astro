@@ -1,8 +1,18 @@
 ---
+import BlindReview from "../ui/BlindReview.astro";
 import SectionHead from "../ui/SectionHead.astro";
 import { AREAS, STAGES } from "../../data/program";
+import { bodyCopy } from "../../lib/styles";
 
-const STAGGER_STEP_MS = 60;
+const STAGGER_STEP_MS = 70;
+
+// The funnel bar is a linear share of the first stage, so the drop from 220 to
+// 1 is drawn at its real proportion rather than flattered by a log scale. The
+// exact figure is always written beside it. The floor is in pixels, not
+// percent: a percentage floor collapses below one device pixel once the track
+// narrows on a phone, which is how the last two bars disappeared.
+const FUNNEL_BASE = Math.max(...STAGES.map((stage) => stage.count));
+const barPercent = (count: number) => (count / FUNNEL_BASE) * 100;
 ---
 
 <section id="how-it-works" class="py-20 md:py-28">
@@ -19,31 +29,56 @@ const STAGGER_STEP_MS = 60;
           <li
             data-reveal
             style={`--reveal-delay: ${index * STAGGER_STEP_MS}ms`}
-            class="group grid gap-2 border-b border-line py-8 transition-[background-color] duration-200 ease-snap first:border-t hover:bg-body/3 md:grid-cols-[6rem_16rem_1fr] md:items-baseline md:gap-6"
+            class="stage group grid gap-2 border-b border-line py-8 transition-[background-color] duration-150 ease-snap first:border-t hover:bg-body/3 md:grid-cols-[6rem_16rem_1fr] md:items-baseline md:gap-6"
           >
-            <span class="font-mono text-2xl text-cyan tabular-nums">
+            <span class="font-mono text-title text-cyan tabular-nums">
               {stage.step}
             </span>
-            <h3 class="text-2xl font-semibold tracking-tight uppercase">
+            <h3 class="text-title font-semibold tracking-heading uppercase">
               {stage.title}
             </h3>
-            <p class="text-muted">{stage.text}</p>
+            <div>
+              <p class={bodyCopy}>{stage.text}</p>
+              <div class="mt-4 flex items-center gap-4">
+                <span class="min-w-0 flex-1" aria-hidden="true">
+                  <span
+                    class="stage-bar block h-1.5 min-w-1.5 rounded-xs bg-cyan/25 ring-1 ring-cyan/70 ring-inset"
+                    style={`width: ${barPercent(stage.count)}%`}
+                  />
+                </span>
+                <span class="shrink-0 font-mono text-label whitespace-nowrap tracking-label text-muted uppercase tabular-nums">
+                  {stage.countLabel}
+                </span>
+              </div>
+            </div>
           </li>
         ))
       }
     </ol>
     <div data-reveal class="mt-16">
-      <h3 class="mb-6 font-mono text-xs tracking-[0.2em] text-muted uppercase">
+      <h3 class="mb-6 font-mono text-label tracking-label text-muted uppercase">
+        What double-blind means here
+      </h3>
+      <BlindReview />
+    </div>
+    <div data-reveal class="mt-16">
+      <h3 class="mb-6 font-mono text-label tracking-label text-muted uppercase">
         Research areas across the cohort
       </h3>
-      <ul class="grid gap-x-12 sm:grid-cols-2">
+      <ul class="grid grid-cols-1 border-t border-l border-line sm:grid-cols-2 lg:grid-cols-3">
         {
           AREAS.map((area) => (
-            <li class="flex items-baseline justify-between gap-4 border-b border-line py-4">
-              <span class="font-semibold tracking-tight">{area.title}</span>
-              <span class="text-right font-mono text-[11px] tracking-[0.08em] text-muted uppercase">
-                {area.tag}
-              </span>
+            <li class="area-cell border-r border-b border-line p-6">
+              <h4 class="text-title font-semibold tracking-heading text-body">
+                {area.title}
+              </h4>
+              <ul class="mt-4 flex flex-wrap gap-x-2 gap-y-1.5">
+                {area.tag.split(" · ").map((topic) => (
+                  <li class="rounded-xs border border-line px-2.5 py-1 font-mono text-label tracking-label text-muted uppercase">
+                    {topic}
+                  </li>
+                ))}
+              </ul>
             </li>
           ))
         }
@@ -51,3 +86,46 @@ const STAGGER_STEP_MS = 60;
     </div>
   </div>
 </section>
+
+<style>
+  /* The funnel bar grows into place with the row, so the narrowing reads as a
+     movement rather than four static ticks. Origin is the left edge, matching
+     the section rules that draw the same way. */
+  .stage-bar {
+    transform-origin: left center;
+    transition:
+      transform 300ms var(--ease-glide),
+      background-color 150ms var(--ease-snap);
+  }
+
+  html.js [data-reveal].stage .stage-bar {
+    transform: scaleX(0);
+  }
+
+  html.js [data-reveal].stage.is-inview .stage-bar {
+    transform: scaleX(1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .stage:hover .stage-bar {
+      background-color: color-mix(in srgb, var(--color-cyan) 45%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js [data-reveal].stage .stage-bar,
+    html.js [data-reveal].stage.is-inview .stage-bar {
+      transform: none;
+    }
+  }
+
+  .area-cell {
+    transition: background-color 150ms var(--ease-snap);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .area-cell:hover {
+      background-color: rgb(226 232 240 / 0.03);
+    }
+  }
+</style>

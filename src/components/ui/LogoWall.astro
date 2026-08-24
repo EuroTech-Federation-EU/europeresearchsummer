@@ -11,29 +11,55 @@ const { title, logos } = Astro.props;
 ---
 
 <div>
-  <h3 class="mb-6 font-mono text-xs tracking-[0.2em] text-muted uppercase">
+  <h3 class="mb-6 font-mono text-label tracking-label text-muted uppercase">
     {title}
   </h3>
-  <div class="flex flex-wrap items-center gap-2.5">
+  <ul class="grid grid-cols-2 border-t border-l border-line sm:grid-cols-3 md:grid-cols-5">
     {
       logos.map((logo) => (
-        <div class="group relative" tabindex="0" aria-label={logo.alt}>
-          <div class="flex h-16 w-24 items-center justify-center rounded-xs bg-body/95 p-2.5 transition-transform duration-200 ease-snap group-hover:scale-105 group-focus-visible:scale-105">
+        <li class="logo-cell border-r border-b border-line">
+          <div class="flex h-full min-h-32 flex-col items-center justify-center gap-3 px-4 py-5">
             <Image
               src={logo.src}
-              alt={logo.alt}
+              alt=""
               width={160}
-              class="max-h-11 w-auto max-w-full object-contain grayscale transition-[filter] duration-200 ease-snap group-hover:grayscale-0 group-focus-visible:grayscale-0"
+              class="logo-mark h-11 w-auto max-w-full object-contain"
             />
+            <span class="text-center font-mono text-label tracking-label text-muted uppercase">
+              {logo.alt}
+            </span>
           </div>
-          <span
-            class="pointer-events-none absolute -top-9 left-1/2 z-10 -translate-x-1/2 translate-y-1 rounded-xs border border-line bg-navy px-2.5 py-1.5 font-mono text-[10px] whitespace-nowrap tracking-[0.1em] text-body uppercase opacity-0 transition-[opacity,transform] duration-150 ease-snap group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
-            aria-hidden="true"
-          >
-            {logo.alt}
-          </span>
-        </div>
+        </li>
       ))
     }
-  </div>
+  </ul>
 </div>
+
+<style>
+  /* Index, not a chip cloud: every mark sits in its own cell of a hairline
+     grid, named underneath. Desaturated at rest so the wall reads as one
+     texture; colour is the hover reward. */
+  .logo-mark {
+    filter: grayscale(1);
+    opacity: 0.85;
+    transition:
+      filter 150ms var(--ease-snap),
+      opacity 150ms var(--ease-snap);
+  }
+
+  .logo-cell {
+    transition: background-color 150ms var(--ease-snap);
+  }
+
+  /* Touch devices fire hover on tap, so the reward is pointer-only. */
+  @media (hover: hover) and (pointer: fine) {
+    .logo-cell:hover {
+      background-color: var(--color-tint);
+    }
+
+    .logo-cell:hover .logo-mark {
+      filter: grayscale(0);
+      opacity: 1;
+    }
+  }
+</style>

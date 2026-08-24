@@ -45,10 +45,46 @@ Dark editorial-brutalist world (ref: europeanrobotics.house): deep navy
 ground, massive uppercase display type, monospace micro-labels
 (`font-mono`, wide tracking), hairline rules (`border-line`) instead of
 boxes, sharp `rounded-xs` actions, cyan as the single working accent.
-Signature moves: hero affiliation marquee (logo + name, pauses on hover,
-off under reduced motion) and logo walls whose names reveal on
-hover/focus. Brand tokens in `src/styles/global.css` `@theme` are locked
-(navy `#0F172A`, cyan `#22D3EE`, accent `#0069a9`, text `#E2E8F0`). Every
+Vertical rules belong to the hero and nowhere else (`GridLines`). They
+frame a single large object with room around it; run behind dense
+content they stop reading as structure and become a cage. This was tried
+site-wide and reverted. Horizontal hairlines carry the structure
+everywhere else.
+
+Signature moves: section rules that draw left to right on reveal, and
+the Network section inverting to paper (`.on-paper`) as the one break in
+the dark run. The hero carries no affiliation marquee: it duplicated the
+Network wall and was cut. The hero is a masthead: three stacked words
+sized so the longest meets the column's right edge (`cqw`, never `vw`,
+which includes the scrollbar), with a height cap so short viewports keep
+the call to action. The header carries no background or rule until the
+page is scrolled. Affiliation walls are hairline grids with the
+name always under the mark, never floating chips with hover-only labels:
+on a light ground the marks already read, and a hover-only name is
+unreachable on touch. Photographs are graded into the navy world with
+`.photo`, never framed in bordered boxes. Type is Space Grotesk + Space
+Mono, self-hosted (see README); tracking is size-specific
+(`tracking-display` above 5rem, `tracking-heading` for section titles).
+Type is a closed system, and staying inside it is the point.
+
+- **Sizes**: nine named roles in the `@theme` ramp (`text-label`,
+  `text-ui`, `text-copy`, `text-lede`, `text-subtitle`, `text-title`,
+  `text-headline`, `text-display`, `text-display-lg`). Each binds its own
+  leading so the two cannot drift. Never a Tailwind t-shirt size, never an
+  arbitrary value, never an unstyled element left at the inherited 16px.
+  The only exceptions are the two wordmarks (hero, Paris), sized per
+  instance because filling a column is a composition, not a ramp step.
+- **Tracking**: exactly three, `tracking-display` / `tracking-heading` /
+  `tracking-label`. Every mono uppercase label uses the last one.
+- **Durations**: exactly four. 150ms for press, hover, colour and exits;
+  300ms for things that move or open; 420ms for the scroll reveal; 700ms
+  for the rule draw. Stagger offsets are always 70ms.
+
+Verify by inventorying computed styles in the browser, not by reading the
+source: `getComputedStyle` over every text node is what catches a stray. The nav bar is quiet chrome, sentence case throughout, with
+the button as its only emphasis.
+Brand tokens in `src/styles/global.css` `@theme` are locked (navy
+`#0F172A`, cyan `#22D3EE`, accent `#0069a9`, text `#E2E8F0`). Every
 pressable element gives `active:scale` press feedback.
 
 ## Verification

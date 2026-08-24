@@ -1,112 +1,74 @@
 ---
-import { Image } from "astro:assets";
-import { PARTICIPANT_AFFILIATIONS } from "../../data/network";
-import { btnGhost, btnPrimary, kicker } from "../../lib/styles";
+import GridLines from "../layout/GridLines.astro";
+import { btnGhost, btnPrimary } from "../../lib/styles";
 
 const STAGGER_STEP_MS = 70;
-// Two copies of the list make the marquee loop seamless (track scrolls -50%).
-const MARQUEE_COPIES = [false, true] as const;
+// Three words, each its own line, set so the longest lands on the column's
+// right edge. The wordmark is the hero; nothing is centred under it.
+const TITLE_WORDS = ["Europe", "Research", "Summer"] as const;
 ---
 
-<section class="relative flex min-h-[calc(100svh-4rem)] flex-col justify-between">
-  <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true">
-  </div>
+<section class="relative flex min-h-[calc(100svh-4rem)] flex-col">
+  <GridLines />
+
   <div
-    class="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 py-16 text-center"
+    class="@container relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pt-6 pb-8"
   >
-    <p data-reveal class={kicker}>First edition · Summer 2026</p>
     <h1
-      data-reveal
-      style={`--reveal-delay: ${STAGGER_STEP_MS}ms`}
-      class="mx-auto mt-8 text-[13vw] leading-[0.92] font-bold tracking-[-0.01em] text-body uppercase md:text-[clamp(5rem,8vw,8rem)]"
+      class="hero-wordmark leading-[0.8] font-bold tracking-display text-body uppercase"
     >
-      Europe Research Summer
+      {
+        TITLE_WORDS.map((word, index) => (
+          <span
+            data-reveal
+            style={`--reveal-delay: ${index * STAGGER_STEP_MS}ms`}
+            class="block"
+          >
+            {word}
+          </span>
+        ))
+      }
     </h1>
-    <p
-      data-reveal
-      style={`--reveal-delay: ${STAGGER_STEP_MS * 2}ms`}
-      class="mx-auto mt-7 max-w-3xl text-lg text-balance text-muted md:text-xl"
-    >
-      Where Europe's strongest student AI researchers surface. Original AI/ML
-      research, reviewed double-blind by working researchers. One final in
-      Paris.
-    </p>
-    <div
-      data-reveal
-      style={`--reveal-delay: ${STAGGER_STEP_MS * 3}ms`}
-      class="mt-10 flex flex-wrap justify-center gap-3"
-    >
-      <a href="#how-it-works" class={btnPrimary}>How it works</a>
-      <a href="#network" class={btnGhost}>Partner with us</a>
-    </div>
   </div>
 
-  <div data-reveal style={`--reveal-delay: ${STAGGER_STEP_MS * 4}ms`} class="relative">
-    <p
-      class="px-6 pb-2 font-mono text-[10px] tracking-[0.18em] text-muted/80 uppercase sm:hidden"
-    >
-      Institutions our participants belong to
-    </p>
+  <div class="relative mx-auto w-full max-w-6xl px-6 pb-8">
     <div
-      class="marquee relative border-y border-line py-4"
-      aria-label="Institutions our participants belong to"
+      data-reveal
+      style={`--reveal-delay: ${TITLE_WORDS.length * STAGGER_STEP_MS}ms`}
+      class="grid gap-8 border-t border-line pt-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:gap-16"
     >
-      <div
-        class="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-stretch max-sm:hidden"
-        aria-hidden="true"
-      >
-        <span
-          class="flex w-64 items-center border-r border-line bg-navy px-6 font-mono text-[10px] leading-relaxed tracking-[0.15em] text-muted uppercase"
-        >
-          Institutions our participants belong to
-        </span>
-        <span class="w-16 bg-linear-to-r from-navy to-transparent"></span>
-      </div>
-      <div class="marquee-track">
-        {
-          MARQUEE_COPIES.map((isCopy) => (
-            <ul class="flex shrink-0 items-center" aria-hidden={isCopy}>
-              {PARTICIPANT_AFFILIATIONS.map((logo) => (
-                <li class="flex items-center gap-3 border-r border-line px-7">
-                  <span class="flex size-9 shrink-0 items-center justify-center rounded-xs bg-body p-1.5">
-                    <Image
-                      src={logo.src}
-                      alt=""
-                      width={80}
-                      class="max-h-6 w-auto max-w-full object-contain"
-                    />
-                  </span>
-                  <span class="font-mono text-[11px] whitespace-nowrap tracking-[0.15em] text-muted uppercase">
-                    {logo.alt}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ))
-        }
+      <p class="max-w-2xl text-lede text-balance text-body">
+        You write the research. Working scientists review it blind. One of you presents in Paris.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#how-it-works" class={btnPrimary}>How it works</a>
+        <a href="#network" class={btnGhost}>Partner with us</a>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* Millimetre-paper texture: a fine grid plus a coarser one, faded out
-     toward the edges so it reads as texture, never as a component. */
-  .hero-grid {
-    background-image:
-      linear-gradient(rgb(226 232 240 / 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(226 232 240 / 0.04) 1px, transparent 1px),
-      linear-gradient(rgb(226 232 240 / 0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(226 232 240 / 0.07) 1px, transparent 1px);
-    background-size:
-      44px 44px,
-      44px 44px,
-      220px 220px,
-      220px 220px;
-    mask-image: radial-gradient(
-      ellipse 95% 85% at 50% 35%,
-      black 35%,
-      transparent 100%
-    );
+  /* Sized so the longest word (RESEARCH) lands on the right edge of the
+     content column at every width, which is what makes the stack read as a
+     masthead rather than a big heading.
+
+     Measured, not guessed: in Space Grotesk bold at `tracking-display`,
+     RESEARCH is 4.674em wide, so the fitting size is 0.2140 x the column.
+     Re-measure it if the face, the weight or the tracking ever changes.
+
+     `cqw` measures the parent's content box (the `@container` on it), which
+     is the column itself. `vw` would include the scrollbar and overflow by
+     its width on any viewport below the cap. 99.3% of the column, not 100%,
+     keeps subpixel rounding off the edge.
+
+     The third term is a height guard: three lines at this leading are 2.4x
+     the font size, so on a short viewport the width-fitting size would push
+     the lede and the actions off screen. It stays out of the way down to
+     about 830px of viewport height; below that the wordmark gives up a
+     little of the right edge rather than the reader giving up the call to
+     action. */
+  .hero-wordmark {
+    font-size: min(21.25cqw, 14.66rem, 27svh);
   }
 </style>

@@ -1,4 +1,4 @@
-// Aggregated, anonymised cohort data. Counts are shown as ranges only —
+// Aggregated, anonymised cohort data. Counts are shown as ranges only,
 // never expose anything that could link an individual to a paper.
 
 export interface CountryPoint {

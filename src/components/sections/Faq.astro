@@ -2,11 +2,12 @@
 import SectionHead from "../ui/SectionHead.astro";
 import { FAQ } from "../../data/faq";
 import { CONTACT_EMAIL } from "../../data/site";
+import { bodyCopy } from "../../lib/styles";
 
 const detailsClass = "faq group border-b border-line";
 const summaryClass =
-  "flex cursor-pointer list-none items-center justify-between gap-4 py-6 text-lg font-semibold tracking-tight [&::-webkit-details-marker]:hidden after:font-mono after:text-2xl after:font-normal after:leading-none after:text-cyan after:transition-transform after:duration-200 after:ease-snap after:content-['+'] group-open:after:rotate-45";
-const STAGGER_STEP_MS = 40;
+  "flex cursor-pointer list-none items-center justify-between gap-4 py-6 text-subtitle font-semibold tracking-heading [&::-webkit-details-marker]:hidden after:font-mono after:text-title after:font-normal after:leading-none after:text-cyan after:transition-transform after:duration-150 after:ease-snap after:content-['+'] group-open:after:rotate-45";
+const STAGGER_STEP_MS = 70;
 ---
 
 <section id="faq" class="py-20 md:py-28">
@@ -24,7 +25,7 @@ const STAGGER_STEP_MS = 40;
             class={detailsClass}
           >
             <summary class={summaryClass}>{item.q}</summary>
-            <p class="pb-6 text-muted">{item.a}</p>
+            <p class={`pb-6 ${bodyCopy}`}>{item.a}</p>
           </details>
         ))
       }
@@ -37,7 +38,7 @@ const STAGGER_STEP_MS = 40;
         <summary class={summaryClass}>
           My question isn't here. Who do I ask?
         </summary>
-        <p class="pb-6 text-muted">
+        <p class={`pb-6 ${bodyCopy}`}>
           Write to us at <a
             href={`mailto:${CONTACT_EMAIL}`}
             class="font-medium text-cyan hover:underline">{CONTACT_EMAIL}</a
