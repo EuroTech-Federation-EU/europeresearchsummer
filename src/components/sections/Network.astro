@@ -6,13 +6,13 @@ import {
   PARTICIPANT_AFFILIATIONS,
   PARTNER_LOGOS,
   REVIEWER_AFFILIATIONS,
-  SOCIETY_LOGOS,
+  COMMUNITY_PARTNERS,
 } from "../../data/network";
 import { btnGhost } from "../../lib/styles";
 
-// Some society marks ship with a baked background, so each keeps the tile
+// Some partner marks ship with a baked background, so each keeps the tile
 // tone its file was drawn for, even on the paper ground.
-const SOCIETY_TILE_TONES = {
+const PARTNER_TILE_TONES = {
   light: "border border-line bg-white",
   dark: "bg-black",
   panel: "bg-card",
@@ -61,24 +61,24 @@ const SOCIETY_TILE_TONES = {
       </div>
       <div data-reveal>
         <h3 class="mb-6 font-mono text-label tracking-label text-muted uppercase">
-          University AI societies onboarded
+          Community partners
         </h3>
         <ul class="flex flex-wrap items-start gap-3">
           {
-            SOCIETY_LOGOS.map((society) => (
+            COMMUNITY_PARTNERS.map((partner) => (
               <li>
                 <a
-                  href={society.href}
+                  href={partner.href}
                   target="_blank"
                   rel="noopener"
-                  aria-label={society.alt}
+                  aria-label={partner.alt}
                   class="society-tile block rounded-xs active:scale-[0.97]"
                 >
                   <span
-                    class={`flex h-16 w-28 items-center justify-center rounded-xs p-3 ${SOCIETY_TILE_TONES[society.tone]}`}
+                    class={`flex h-16 w-28 items-center justify-center rounded-xs p-3 ${PARTNER_TILE_TONES[partner.tone]}`}
                   >
                     <Image
-                      src={society.src}
+                      src={partner.src}
                       alt=""
                       width={220}
                       class="max-h-10 w-auto max-w-full object-contain"
@@ -88,7 +88,7 @@ const SOCIETY_TILE_TONES = {
                     class="mt-2.5 line-clamp-2 block w-28 text-center font-mono text-label tracking-label text-muted uppercase"
                     aria-hidden="true"
                   >
-                    {society.label}
+                    {partner.label}
                   </span>
                 </a>
               </li>
